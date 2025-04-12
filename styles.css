@@ -20,24 +20,7 @@ body {
     font-family: var(--font-main);
     color: var(--text-color);
     line-height: 1.6;
-    overflow-x: hidden;
-}
-
-/* Particle Background Styles */
-#particle-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background: linear-gradient(135deg, #f8f1ff 0%, #e6d9ff 100%);
-}
-
-.content-wrapper {
-    position: relative;
-    z-index: 1;
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: white;
 }
 
 .container {
@@ -87,13 +70,12 @@ body {
 
 /* Header Styles */
 header {
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: white;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
-    backdrop-filter: blur(5px);
 }
 
 header .container {
@@ -194,7 +176,7 @@ nav ul li a:hover::after {
 /* Hero Section */
 .hero {
     padding: 150px 0 100px;
-    background: transparent;
+    background: linear-gradient(135deg, var(--light-color) 0%, white 100%);
 }
 
 .hero .container {
@@ -238,7 +220,7 @@ nav ul li a:hover::after {
 /* Features Section */
 .features {
     padding: 100px 0;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--light-color);
 }
 
 .features-grid {
@@ -289,7 +271,7 @@ nav ul li a:hover::after {
 /* Products Section */
 .products {
     padding: 100px 0;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: white;
 }
 
 .product-grid {
@@ -363,7 +345,7 @@ nav ul li a:hover::after {
 /* Testimonials Section */
 .testimonials {
     padding: 100px 0;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--light-color);
 }
 
 .testimonial-slider {
@@ -480,7 +462,7 @@ nav ul li a:hover::after {
 /* Contact Section */
 .contact {
     padding: 100px 0;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: white;
 }
 
 .contact .container {
@@ -586,7 +568,7 @@ nav ul li a:hover::after {
 
 /* Footer */
 footer {
-    background-color: rgba(74, 59, 118, 0.95);
+    background-color: var(--dark-color);
     color: white;
     padding: 80px 0 0;
 }
