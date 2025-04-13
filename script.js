@@ -1,10 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Page Loader
+    window.addEventListener('load', function() {
+        const pageLoader = document.querySelector('.page-loader');
+        setTimeout(function() {
+            pageLoader.classList.add('fade-out');
+            setTimeout(function() {
+                pageLoader.style.display = 'none';
+            }, 500);
+        }, 1000);
+    });
+
+    // Header Scroll Effect
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
     // Mobile Menu Toggle
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navMenu = document.querySelector('nav ul');
     
     mobileMenuBtn.addEventListener('click', function() {
         navMenu.classList.toggle('active');
+        mobileMenuBtn.classList.toggle('active');
     });
     
     // Close mobile menu when clicking a link
@@ -12,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
             navMenu.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
         });
     });
     
@@ -29,10 +52,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Open/Close Cart
     cartIcon.addEventListener('click', function() {
         cartModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
     });
     
     closeCart.addEventListener('click', function() {
         cartModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Close cart when clicking outside
+    cartModal.addEventListener('click', function(e) {
+        if (e.target === cartModal) {
+            cartModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
     });
     
     // Add to Cart
@@ -41,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const id = button.getAttribute('data-id');
             const name = button.getAttribute('data-name');
             const price = parseFloat(button.getAttribute('data-price'));
+            const image = button.closest('.product-card').querySelector('img').src;
             
             // Check if item already in cart
             const existingItem = cart.find(item => item.id === id);
@@ -52,17 +86,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     id,
                     name,
                     price,
+                    image,
                     quantity: 1
                 });
             }
             
             updateCart();
             cartModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
             
             // Add to cart animation
             button.textContent = 'Added!';
+            button.style.backgroundColor = '#4CAF50';
             setTimeout(() => {
                 button.textContent = 'Add to Cart';
+                button.style.backgroundColor = '';
             }, 1000);
         });
     });
@@ -80,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cartItemsContainer.innerHTML = '';
         
         if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
+            cartItemsContainer.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
             return;
         }
         
@@ -89,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
             cartItemElement.classList.add('cart-item');
             
             cartItemElement.innerHTML = `
-                <img src="https://via.placeholder.com/80x80?text=${encodeURIComponent(item.name)}" alt="${item.name}">
+                <img src="${item.image}" alt="${item.name}">
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
                     <p class="cart-item-price">$${item.price.toFixed(2)}</p>
@@ -184,11 +222,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        alert('Thank you for your purchase! Redirecting to checkout...');
         // In a real implementation, this would redirect to a checkout page
+        alert('Thank you for your purchase! Your order total is $' + document.querySelector('.total-amount').textContent);
         cart = [];
         updateCart();
         cartModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
     });
     
     // Testimonial Slider
@@ -196,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const prevBtn = document.querySelector('.prev');
     const nextBtn = document.querySelector('.next');
     let currentTestimonial = 0;
+    let testimonialInterval;
     
     function showTestimonial(index) {
         testimonials.forEach(testimonial => {
@@ -206,12 +246,28 @@ document.addEventListener('DOMContentLoaded', function() {
         currentTestimonial = index;
     }
     
+    function startTestimonialSlider() {
+        testimonialInterval = setInterval(() => {
+            let newIndex = currentTestimonial + 1;
+            if (newIndex >= testimonials.length) {
+                newIndex = 0;
+            }
+            showTestimonial(newIndex);
+        }, 5000);
+    }
+    
+    function resetTestimonialInterval() {
+        clearInterval(testimonialInterval);
+        startTestimonialSlider();
+    }
+    
     prevBtn.addEventListener('click', function() {
         let newIndex = currentTestimonial - 1;
         if (newIndex < 0) {
             newIndex = testimonials.length - 1;
         }
         showTestimonial(newIndex);
+        resetTestimonialInterval();
     });
     
     nextBtn.addEventListener('click', function() {
@@ -220,16 +276,8 @@ document.addEventListener('DOMContentLoaded', function() {
             newIndex = 0;
         }
         showTestimonial(newIndex);
+        resetTestimonialInterval();
     });
-    
-    // Auto-rotate testimonials
-    setInterval(() => {
-        let newIndex = currentTestimonial + 1;
-        if (newIndex >= testimonials.length) {
-            newIndex = 0;
-        }
-        showTestimonial(newIndex);
-    }, 5000);
     
     // Form Submissions
     const contactForm = document.getElementById('contact-form');
@@ -270,4 +318,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize
     loadCartFromLocalStorage();
     showTestimonial(0);
+    startTestimonialSlider();
 });
